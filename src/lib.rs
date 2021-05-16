@@ -1,4 +1,4 @@
-use seed::{*, prelude::*};
+use seed::{prelude::*, *};
 use uuid::Uuid;
 
 mod utils;
@@ -39,7 +39,7 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
         Msg::Fetch => {
             orders.skip();
             orders.perform_cmd(async {
-                let response = fetch("http://localhost:8083/todos")
+                let response = fetch("http://tareas.ctimm.de/todos")
                     .await
                     .expect("Backend not available");
 
@@ -57,25 +57,25 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
     }
 }
 
-
 fn print_todos(todos: &Option<Vec<Todo>>) -> Node<Msg> {
     let mut total = Vec::new();
     match todos {
         None => (),
-        Some(todo_list) => {
-            todo_list.iter().for_each(|todo| {
-                total.push(div![input![attrs!{
+        Some(todo_list) => todo_list.iter().for_each(|todo| {
+            total.push(div![
+                input![attrs! {
                     At::Type => "checkbox"
-                }],format!("Tarea: {}, Descripcion: {}", todo.title, todo.content).as_str()]);
-            })
-        }
+                }],
+                format!("Tarea: {}, Descripcion: {}", todo.title, todo.content).as_str()
+            ]);
+        }),
     }
     div![total]
 }
 
 fn view(model: &Model) -> impl IntoNodes<Msg> {
     div![
-        button![ev(Ev::Click, |_| Msg::Fetch),"Fetch todos"],
+        button![ev(Ev::Click, |_| Msg::Fetch), "Fetch todos"],
         "todos: ",
         print_todos(&model.todos),
     ]
