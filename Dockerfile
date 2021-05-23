@@ -1,4 +1,4 @@
-FROM rust:1.52.0 as build-wasm
+FROM --platform=$BUILDPLATFORM rust:1.52.0 as build-wasm
 
 WORKDIR /usr/app/workdir
 RUN cargo install wasm-pack
@@ -21,7 +21,7 @@ RUN touch src/lib.rs
 RUN wasm-pack build
 
 
-FROM node:14 as build-npm
+FROM --platform=$BUILDPLATFORM node:14 as build-npm
 WORKDIR /app
 COPY --from=build-wasm /usr/app/workdir/pkg /app/pkg
 COPY --from=build-wasm /usr/app/workdir/www /app/www
