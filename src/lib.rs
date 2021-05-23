@@ -24,10 +24,6 @@ struct Todo {
     done: bool,
 }
 
-#[derive(Clone)]
-struct Stuff {
-    name: String,
-}
 
 #[derive(Default, Debug)]
 struct Model {
